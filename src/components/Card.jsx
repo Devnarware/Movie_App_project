@@ -1,8 +1,34 @@
-import React from 'react'
+import { useState } from "react";
 
-const Card = () => {
+
+const Card = (props) => {
+
+  const checker = ()=>{
+    if(liked){
+      setLiked(false)
+    }else{
+      setLiked(true)
+    }
+  }
+
+  const [liked, setLiked] = useState(false);
   return (
-    <div>Card</div>
+    <div className='
+         px-5 py-3
+        border border-amber-50 rounded-2xl
+        bg-[#534e4e89]
+         flex  gap-5'>
+
+      <h1 className={'text-2xl font-semibold text-amber-50'}>
+        {props.name}
+      </h1>
+      <button
+        className={'cursor-pointer '}
+        onClick={
+           checker
+          }
+      >{liked ? '❤️': '🤍'}</button>
+    </div >
   )
 }
 
