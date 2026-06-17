@@ -14,16 +14,16 @@
 
     --color-dark-100: #0f0d23;
 
-    --font-dm-sans: DM Sans, sans-serif;
+    --font-dm-sans:  DM Sans, sans-serif;
 
     --breakpoint-xs: 480px;
 
-    /*--background-image-hero-pattern: url("/hero-bg.png");*/
+    --background-image-hero-pattern: url("./BG.png");
 }
 
 @layer base {
     body {
-        font-family: "DM Sans", serif;
+        font-family: system-ui, "DM Sans", serif;
         font-optical-sizing: auto;
         background: #030014;
     }
