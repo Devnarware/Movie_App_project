@@ -3,7 +3,6 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
-@import "tailwindcss";
 
 @theme {
     --color-primary: #030014;
@@ -19,7 +18,7 @@
 
     --breakpoint-xs: 480px;
 
-    --background-image-hero-pattern: url("/hero-bg.png");
+    /*--background-image-hero-pattern: url("/hero-bg.png");*/
 }
 
 @layer base {
