@@ -16,11 +16,13 @@ const App = () => {
     const [movieList, setMovieList] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
-    console.log("hello")
 
     const fetchMovies = async () =>{
-        try{
 
+        setIsLoading(true)
+        setErrorMessage('')
+
+        try{
             const endpoint = `${API_BASE_URL}?apikey=${API_KEY}&s=Batman&type=movie`
             const response = await fetch(endpoint, API_OPTIONS) ;
 
@@ -29,6 +31,7 @@ const App = () => {
             }
 
             const data = await response.json() ;
+            console.log(data)
 
             if(data.Response === 'False'){
                 setErrorMessage(data.Error || 'Failed to fetch movies')
@@ -36,11 +39,13 @@ const App = () => {
                 return;
             }
 
-            setMovieList(data.results) ;
+            setMovieList(data.Search || []) ;
 
         }catch (error) {
             console.error(`Error fetching movies: ${error}`) ;
             setErrorMessage('Error fetching movies, Please try again later') ;
+        }finally{
+            setIsLoading(false)
         }
     }
 
@@ -66,7 +71,17 @@ const App = () => {
                 <section className={"all-movies"}>
                     <h2>All movies</h2>
 
-                    {errorMessage && <p className="text-red-500">{errorMessage}</p> }
+                    {isLoading ? (
+                        <p className={'text-white text-3xl'}>Loading....</p>
+                    ): errorMessage ? (
+                        <p className={'text-red-500'}>{errorMessage}</p>
+                    ):(
+                        <ul>
+                            {movieList.map((movie) => (
+                                <p key= {movie.imdbID} className={'text-white'}>{movie.Title}</p>
+                            ))}
+                        </ul>
+                    )}
                 </section>
 
             </div>
