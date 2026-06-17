@@ -1,8 +1,19 @@
 
 
-const Search = () => {
+const Search = ({searchTerm, setSearchTearm}) => {
     return (
-        <div className={"text-white text-3xl"}>Search</div>
+        <div className={'search'}>
+            <div>
+                <img src={"search.svg"} alt={"search"}/>
+
+                < input
+                    type={"text"}
+                    placeholder={"Search through thousands of movies "}
+                    value={searchTerm}
+                    onChange={(e)=>{setSearchTearm(e.target.value)}}
+                />
+            </div>
+        </div>
     )
 }
 export default Search
