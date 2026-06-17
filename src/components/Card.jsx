@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 
 const Card = (props) => {
@@ -12,6 +12,12 @@ const Card = (props) => {
   }
 
   const [liked, setLiked] = useState(false);
+
+    useEffect(() => {
+        console.log(`${props.name} has been ${liked ? 'liked' : 'disliked'}`)
+    }, [liked]);
+
+
   return (
     <div className='
          px-5 py-3
