@@ -3,9 +3,9 @@ import {useEffect, useState} from "react";
 import Spinner from "./components/Spinner.jsx";
 import Movie from "./components/Movie.jsx";
 
-const API_BASE_URL = 'https://www.omdbapi.com/';
+const API_BASE_URL = 'https://movie-proxy-iaov.onrender.com/movies';
 
-const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
+
 
 const API_OPTIONS = {
 }
@@ -25,7 +25,7 @@ const App = () => {
         setErrorMessage('')
 
         try{
-            const endpoint = `${API_BASE_URL}?apikey=${API_KEY}&s=Batman&type=movie`
+            const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
             const response = await fetch(endpoint, API_OPTIONS) ;
 
             if(!response.ok){
@@ -80,7 +80,7 @@ const App = () => {
                     ):(
                         <ul>
                             {movieList.map((movie) => (
-                               <Movie key= {movie.imdbID} movie={movie}/>
+                               <Movie key= {movie.id} movie={movie}/>
                             ))}
                         </ul>
                     )}
