@@ -3,11 +3,13 @@ import {useEffect, useState} from "react";
 import Spinner from "./components/Spinner.jsx";
 import Movie from "./components/Movie.jsx";
 
-const API_BASE_URL = 'https://movie-proxy-iaov.onrender.com/movies';
-
-
+const API_BASE_URL = import.meta.env.VITE.API_BASE_URL;
 
 const API_OPTIONS = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+    }
 }
 
 
