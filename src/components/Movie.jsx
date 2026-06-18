@@ -1,10 +1,12 @@
 // , Year
 
-const Movie = ({movie: {title}}) => {
+const Movie = ({movie: 
+    {title, poster_path, release_date, original_language}
+}) => {
     return (
         <div className={'movie-card'}>
-            {/* <img src={Poster} alt="" /> */}
-            <p className="text-white text-3xl">{title}</p>
+            <img src={poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '/no-movie.png'} alt="{title}" />
+            <p className="text-white ">{title}</p>
         </div>
     )
 }
