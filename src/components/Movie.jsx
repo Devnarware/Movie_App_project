@@ -1,9 +1,9 @@
+// , Year
 
-
-const Movie = ({movie}) => {
+const Movie = ({movie: {Title, Poster}}) => {
     return (
-        <div>
-            <p key= {movie.imdbID} className={'text-white'}>{movie.Title}</p>
+        <div className={'movie-card'}>
+            
         </div>
     )
 }

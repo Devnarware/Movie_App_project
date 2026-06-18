@@ -80,7 +80,7 @@ const App = () => {
                     ):(
                         <ul>
                             {movieList.map((movie) => (
-                               <Movie />
+                               <Movie key= {movie.imdbID} movie={movie}/>
                             ))}
                         </ul>
                     )}
