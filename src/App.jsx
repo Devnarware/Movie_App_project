@@ -1,5 +1,7 @@
 import Search from "./components/Search.jsx";
 import {useEffect, useState} from "react";
+import Spinner from "./components/Spinner.jsx";
+import Movie from "./components/Movie.jsx";
 
 const API_BASE_URL = 'https://www.omdbapi.com/';
 
@@ -69,16 +71,16 @@ const App = () => {
                 </header>
 
                 <section className={"all-movies"}>
-                    <h2>All movies</h2>
+                    <h2 className={'mt-10'}>All movies</h2>
 
                     {isLoading ? (
-                        <p className={'text-white text-3xl'}>Loading....</p>
+                        <Spinner/>
                     ): errorMessage ? (
                         <p className={'text-red-500'}>{errorMessage}</p>
                     ):(
                         <ul>
                             {movieList.map((movie) => (
-                                <p key= {movie.imdbID} className={'text-white'}>{movie.Title}</p>
+                               <Movie />
                             ))}
                         </ul>
                     )}
