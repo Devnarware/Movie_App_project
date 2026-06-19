@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Spinner from "./components/Spinner.jsx";
 import Movie from "./components/Movie.jsx";
 import { useDebounce } from "react-use";
+import { updateSearchCount } from "./appwrite.js";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -43,7 +44,7 @@ const App = () => {
             }
 
             const data = await response.json();
-            console.log(data)
+            // console.log(data)
 
             if (data.Response === 'False') {
                 setErrorMessage(data.Error || 'Failed to fetch movies')
@@ -52,6 +53,8 @@ const App = () => {
             }
 
             setMovieList(data.results || []);
+
+            updateSearchCount()
 
         } catch (error) {
             console.error(`Error fetching movies: ${error}`);
