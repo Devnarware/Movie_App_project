@@ -1,11 +1,11 @@
-// , Year
+
 
 const Movie = ({movie: 
     {title, poster_path, release_date, original_language, vote_average}
 }) => {
     return (
         <div className={'movie-card'}>
-            <img src={poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '/no-movie.png'} alt={title} />
+            <img src={poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '/No-Poster.png'} alt={title} />
 
             <div className="mt-4">
                 <h3>{title}</h3>
