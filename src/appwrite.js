@@ -23,7 +23,7 @@ export const updateSearchCount = async (searchTerm, movie) =>{
                 count: doc.count + 1
             })
         }else {
-            await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique, {
+            await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
                 searchterm: searchTerm,
                 count: 1,
                 movie_id: movie.id,
