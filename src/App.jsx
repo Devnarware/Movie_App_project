@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Spinner from "./components/Spinner.jsx";
 import Movie from "./components/Movie.jsx";
 import { useDebounce } from "react-use";
-import { updateSearchCount } from "./appwrite.js";
+import { getTrendingMovies, updateSearchCount } from "./appwrite.js";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -67,9 +67,23 @@ const App = () => {
         }
     }
 
+    const loadTrendingMovies = async() =>{
+        try{
+            const movies = await getTrendingMovies() ;
+
+            setTrendingMovies(movies) ;
+        }catch(error){
+            console.error(`Error fetching Treniding movies: ${error}`)
+        }
+    }
+
     useEffect(() => {
         fetchMovies(debouncedSearchTerm)
     }, [debouncedSearchTerm])
+
+    useEffect(() =>{
+        loadTrendingMovies() ;
+    }, [])
 
 
     return (
