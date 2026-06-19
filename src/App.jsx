@@ -2,6 +2,7 @@ import Search from "./components/Search.jsx";
 import { useEffect, useState } from "react";
 import Spinner from "./components/Spinner.jsx";
 import Movie from "./components/Movie.jsx";
+import { useDebounce } from "react-use";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -19,6 +20,9 @@ const App = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [movieList, setMovieList] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+    useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
 
     const fetchMovies = async (query = '') => {
@@ -58,8 +62,8 @@ const App = () => {
     }
 
     useEffect(() => {
-        fetchMovies(searchTerm)
-    }, [searchTerm])
+        fetchMovies(debouncedSearchTerm)
+    }, [debouncedSearchTerm])
 
 
     return (
