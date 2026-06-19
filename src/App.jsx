@@ -100,8 +100,23 @@ const App = () => {
                     < Search searchTerm={searchTerm} setSearchTearm={setSearchTerm} />
                 </header>
 
+                {trendingMovies.length > 0 && (
+                    <section className="treiding">
+                        <h2>Trending Movies</h2>
+
+                        <ul>
+                            {trendingMovies.map((movie, index) =>(
+                                <li key={movie.$id}>
+                                    <p>{index + 1}</p>
+                                </li>
+                                )
+                            )}
+                        </ul>
+                    </section>
+                )}
+
                 <section className={"all-movies"}>
-                    <h2 className={'mt-10'}>All movies</h2>
+                    <h2>All movies</h2>
 
                     {isLoading ? (
                         <Spinner />
