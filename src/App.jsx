@@ -35,9 +35,9 @@ const App = () => {
         setErrorMessage('')
 
         try {
-            const endpoint = query 
-            ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-            : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
+            const endpoint = query
+                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
 
 
             const response = await fetch(endpoint, API_OPTIONS);
@@ -69,12 +69,12 @@ const App = () => {
         }
     }
 
-    const loadTrendingMovies = async() =>{
-        try{
-            const movies = await getTrendingMovies() ;
+    const loadTrendingMovies = async () => {
+        try {
+            const movies = await getTrendingMovies();
 
-            setTrendingMovies(movies.filter(movie => movie.poster_url && !movie.poster_url.endsWith('null'))) ;
-        }catch(error){
+            setTrendingMovies(movies.filter(movie => movie.poster_url && !movie.poster_url.endsWith('null')));
+        } catch (error) {
             console.error(`Error fetching Treniding movies: ${error}`)
         }
     }
@@ -83,8 +83,8 @@ const App = () => {
         fetchMovies(debouncedSearchTerm)
     }, [debouncedSearchTerm])
 
-    useEffect(() =>{
-        loadTrendingMovies() ;
+    useEffect(() => {
+        loadTrendingMovies();
     }, [])
 
 
@@ -107,19 +107,19 @@ const App = () => {
                         <h2>Most Searched Movies</h2>
 
                         <ul>
-                            {trendingMovies.map((movie, index) =>(
+                            {trendingMovies.map((movie, index) => (
                                 <li key={movie.$id} className="cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200" onClick={() => setSelectedMovieId(movie.movie_id)}>
                                     <p>{index + 1}</p>
                                     <img src={movie.poster_url} alt={movie.title} />
                                 </li>
-                                )
+                            )
                             )}
                         </ul>
                     </section>
                 )}
 
                 <section className={"all-movies"}>
-                    <h2>Trending Movies</h2>
+                    <h2>All Movies</h2>
 
                     {isLoading ? (
                         <Spinner />
