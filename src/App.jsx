@@ -2,6 +2,7 @@ import Search from "./components/Search.jsx";
 import { useEffect, useState } from "react";
 import Spinner from "./components/Spinner.jsx";
 import Movie from "./components/Movie.jsx";
+import MovieDetailsModal from "./components/MovieDetailsModal.jsx";
 import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite.js";
 
@@ -23,6 +24,7 @@ const App = () => {
     const [trendingMovies, setTrendingMovies] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const [selectedMovieId, setSelectedMovieId] = useState(null);
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 700, [searchTerm])
 
@@ -106,7 +108,7 @@ const App = () => {
 
                         <ul>
                             {trendingMovies.map((movie, index) =>(
-                                <li key={movie.$id}>
+                                <li key={movie.$id} className="cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200" onClick={() => setSelectedMovieId(movie.movie_id)}>
                                     <p>{index + 1}</p>
                                     <img src={movie.poster_url} alt={movie.title} />
                                 </li>
@@ -126,13 +128,17 @@ const App = () => {
                     ) : (
                         <ul>
                             {movieList.map((movie) => (
-                                <Movie key={movie.id} movie={movie} />
+                                <Movie key={movie.id} movie={movie} onClick={() => setSelectedMovieId(movie.id)} />
                             ))}
                         </ul>
                     )}
                 </section>
 
             </div>
+
+            {selectedMovieId && (
+                <MovieDetailsModal movieId={selectedMovieId} onClose={() => setSelectedMovieId(null)} />
+            )}
         </main>
     )
 }
