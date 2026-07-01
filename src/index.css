@@ -47,6 +47,11 @@
     header img {
         @apply w-full max-w-lg h-auto object-contain mx-auto drop-shadow-md;
     }
+
+    dialog::backdrop {
+        background-color: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+    }
 }
 
 @layer components {
