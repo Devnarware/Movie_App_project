@@ -1,10 +1,11 @@
 
 
 const Movie = ({movie: 
-    {title, poster_path, release_date, original_language, vote_average}
+    {title, poster_path, release_date, original_language, vote_average},
+    onClick
 }) => {
     return (
-        <div className={'movie-card'}>
+        <div className={'movie-card cursor-pointer hover:scale-[1.02] active:scale-95 transition-all duration-200'} onClick={onClick}>
             <img src={poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '/No-Poster.png'} alt={title} />
 
             <div className="mt-4">
