@@ -63,6 +63,8 @@ const MovieDetailsModal = ({ movieId, onClose }) => {
     if (!dialog) return;
 
     dialog.showModal();
+    // Lock body scroll while modal is open
+    document.body.style.overflow = "hidden";
 
     const handleCancel = (e) => {
       e.preventDefault();
@@ -73,6 +75,8 @@ const MovieDetailsModal = ({ movieId, onClose }) => {
     return () => {
       dialog.removeEventListener("cancel", handleCancel);
       dialog.close();
+      // Restore body scroll
+      document.body.style.overflow = "";
     };
   }, [onClose]);
 

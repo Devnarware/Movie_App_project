@@ -52,6 +52,12 @@
         background-color: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(8px);
     }
+
+    dialog[open] {
+        margin: auto;
+        position: fixed;
+        inset: 0;
+    }
 }
 
 @layer components {
