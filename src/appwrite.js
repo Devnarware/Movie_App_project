@@ -11,6 +11,8 @@ const client = new Client()
 const database = new Databases(client)
 
 export const updateSearchCount = async (searchTerm, movie) =>{
+    if (!movie || !movie.poster_path) return;
+
     try{
         const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
             Query.equal('searchterm', searchTerm)

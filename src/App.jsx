@@ -55,7 +55,7 @@ const App = () => {
 
             setMovieList(data.results || []);
 
-            if (query && data.results.length > 0) {
+            if (query && data.results.length > 0 && data.results[0].poster_path) {
                 await updateSearchCount(query, data.results[0])
             }
 
@@ -71,7 +71,7 @@ const App = () => {
         try{
             const movies = await getTrendingMovies() ;
 
-            setTrendingMovies(movies) ;
+            setTrendingMovies(movies.filter(movie => movie.poster_url && !movie.poster_url.endsWith('null'))) ;
         }catch(error){
             console.error(`Error fetching Treniding movies: ${error}`)
         }
@@ -102,7 +102,7 @@ const App = () => {
 
                 {trendingMovies.length > 0 && (
                     <section className="trending">
-                        <h2>Trending Movies</h2>
+                        <h2>Most Searched Movies</h2>
 
                         <ul>
                             {trendingMovies.map((movie, index) =>(
@@ -117,7 +117,7 @@ const App = () => {
                 )}
 
                 <section className={"all-movies"}>
-                    <h2>All movies</h2>
+                    <h2>Trending Movies</h2>
 
                     {isLoading ? (
                         <Spinner />
