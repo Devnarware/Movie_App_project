@@ -1,5 +1,5 @@
 import Search from "./components/Search.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Spinner from "./components/Spinner.jsx";
 import Movie from "./components/Movie.jsx";
 import MovieDetailsModal from "./components/MovieDetailsModal.jsx";
@@ -26,18 +26,29 @@ const App = () => {
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [selectedMovieId, setSelectedMovieId] = useState(null);
 
+    // Infinite scroll state
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const sentinelRef = useRef(null);
+
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 700, [searchTerm])
 
 
-    const fetchMovies = async (query = '') => {
+    const fetchMovies = async (query = '', pageNum = 1) => {
 
-        setIsLoading(true)
-        setErrorMessage('')
+        // Use different loading states for first page vs subsequent pages
+        if (pageNum === 1) {
+            setIsLoading(true);
+            setErrorMessage('');
+        } else {
+            setIsLoadingMore(true);
+        }
 
         try {
             const endpoint = query
-                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
+                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${pageNum}`
+                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${pageNum}`
 
 
             const response = await fetch(endpoint, API_OPTIONS);
@@ -47,7 +58,6 @@ const App = () => {
             }
 
             const data = await response.json();
-            // console.log(data)
 
             if (data.Response === 'False') {
                 setErrorMessage(data.Error || 'Failed to fetch movies')
@@ -55,17 +65,31 @@ const App = () => {
                 return;
             }
 
-            setMovieList(data.results || []);
+            const newResults = data.results || [];
 
-            if (query && data.results.length > 0 && data.results[0].poster_path) {
-                await updateSearchCount(query, data.results[0])
+            if (pageNum === 1) {
+                setMovieList(newResults);
+            } else {
+                setMovieList(prev => [...prev, ...newResults]);
+            }
+
+            setTotalPages(data.total_pages || 1);
+
+            if (query && pageNum === 1 && newResults.length > 0 && newResults[0].poster_path) {
+                await updateSearchCount(query, newResults[0])
             }
 
         } catch (error) {
             console.error(`Error fetching movies: ${error}`);
-            setErrorMessage('Error fetching movies, Please try again later');
+            if (pageNum === 1) {
+                setErrorMessage('Error fetching movies, Please try again later');
+            }
         } finally {
-            setIsLoading(false)
+            if (pageNum === 1) {
+                setIsLoading(false);
+            } else {
+                setIsLoadingMore(false);
+            }
         }
     }
 
@@ -79,13 +103,42 @@ const App = () => {
         }
     }
 
+    // Reset page to 1 when search term changes
     useEffect(() => {
-        fetchMovies(debouncedSearchTerm)
+        setPage(1);
+        fetchMovies(debouncedSearchTerm, 1);
     }, [debouncedSearchTerm])
+
+    // Fetch next page when page increments (but not for page 1, that's handled above)
+    useEffect(() => {
+        if (page > 1) {
+            fetchMovies(debouncedSearchTerm, page);
+        }
+    }, [page])
 
     useEffect(() => {
         loadTrendingMovies();
     }, [])
+
+    // IntersectionObserver to detect when sentinel is near viewport
+    useEffect(() => {
+        const sentinel = sentinelRef.current;
+        if (!sentinel) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const entry = entries[0];
+                if (entry.isIntersecting && !isLoading && !isLoadingMore && page < totalPages) {
+                    setPage(prev => prev + 1);
+                }
+            },
+            { rootMargin: '400px' } // Trigger 400px before reaching the bottom
+        );
+
+        observer.observe(sentinel);
+
+        return () => observer.disconnect();
+    }, [isLoading, isLoadingMore, page, totalPages]);
 
 
     return (
@@ -126,11 +179,21 @@ const App = () => {
                     ) : errorMessage ? (
                         <p className={'text-red-500'}>{errorMessage}</p>
                     ) : (
-                        <ul>
-                            {movieList.map((movie) => (
-                                <Movie key={movie.id} movie={movie} onClick={() => setSelectedMovieId(movie.id)} />
-                            ))}
-                        </ul>
+                        <>
+                            <ul>
+                                {movieList.map((movie) => (
+                                    <Movie key={movie.id} movie={movie} onClick={() => setSelectedMovieId(movie.id)} />
+                                ))}
+                            </ul>
+
+                            {/* Sentinel element — triggers loading next page when scrolled into view */}
+                            <div ref={sentinelRef} className="w-full py-8 flex justify-center">
+                                {isLoadingMore && <Spinner />}
+                                {page >= totalPages && movieList.length > 0 && (
+                                    <p className="text-zinc-500 text-sm">You've reached the end 🎬</p>
+                                )}
+                            </div>
+                        </>
                     )}
                 </section>
 
@@ -143,3 +206,4 @@ const App = () => {
     )
 }
 export default App
+
